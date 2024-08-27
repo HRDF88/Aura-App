@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
@@ -46,7 +47,9 @@ class LoginActivity : AppCompatActivity() {
             viewModel.onPasswordChanged(it.toString())
         }
         login.setOnClickListener {
-            viewModel.onLoginClicked()
+            val identifierValue = identifier.text.toString()
+            val passwordValue = password.text.toString()
+            viewModel.onLoginClicked(identifierValue, passwordValue)
         }
 
         // Observe the UI state from the ViewModel
@@ -55,7 +58,17 @@ class LoginActivity : AppCompatActivity() {
                 login.isEnabled = uiState.isLoginButtonEnabled
                 loading.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
                 //mettre gestion erreur
+                if (uiState.error.isNotBlank()) {
+                    //Affiche une alerte avec le message d'erreur
+                    AlertDialog.Builder(this@LoginActivity)
+                        .setTitle("Erreur de connexion")
+                        .setMessage(uiState.error)
+                        .setPositiveButton("OK", null)
+                        .show()
+                }
+
             }
+
         }
 
         // Observe navigation events from the ViewModel
@@ -70,18 +83,6 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
-
-        /*on ne veux pas que l ui reagisse toute seul sans viewmodel
-         login.setOnClickListener {
-            loading.visibility = View.VISIBLE
-
-            val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-            startActivity(intent)
-
-            finish()
-          }
-
-         */
 
     }
 

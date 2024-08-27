@@ -12,4 +12,7 @@
   <string name="prompt_recipient">Destinataire</string>
   <string name="prompt_amount">Montant</string>
   <string name="action_transfer">Faire le virement</string>
+  <string name="error_no_Internet">Pas de connexion Internet. Veuillez vérifier votre connexion et réessayer.</string>
+  <string name="error_invalid_identifier">Identifiant ou mot de passe incorrect</string>
+  <string name="unspecified_error">Erreur non specifiée</string>
 </resources>

@@ -1,14 +1,15 @@
 package viewmodel.login
 
-import android.content.Intent
-import android.os.Bundle
-import android.view.View
-import com.aura.ui.home.HomeActivity
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
+import android.util.Log
+import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aura.databinding.ActivityLoginBinding
+import com.aura.Bo.User
+import com.aura.R
+import com.aura.Utils.LoginApiService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +17,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.intellij.lang.annotations.Identifier
+import okio.IOException
 import javax.inject.Inject
+import javax.security.auth.login.LoginException
 
 
 /**
@@ -26,7 +28,7 @@ import javax.inject.Inject
  * utility methods related to the notes UI.
  */
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val repository: LoginRepository) : ViewModel() {
+class LoginViewModel @Inject constructor(@ApplicationContext private val context: Context, private val loginApi: LoginApiService) : ViewModel() {
     // Create TAG for logging
     companion object {
         private const val TAG = "LoginViewModel"
@@ -61,22 +63,87 @@ class LoginViewModel @Inject constructor(private val repository: LoginRepository
         }
     }
 
-    // Handle login button click
-    fun onLoginClicked() {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(isLoading = true, isLoginButtonEnabled = false)
-            }
-            //appel au repository pour provoquer le login, gérer les cas d'erreur
-            // si login = succes je previens l ui avec un evenement = _navigationEvents.send(NavigationEvent.NavigateToHome)
-            _uiState.update { currentState ->
-                currentState.copy(isLoading = false, isLoginButtonEnabled = true)
-            }
-
+    fun onError(errorMessage:String){
+        _uiState.update { currentState->
+            currentState.copy(
+                error = errorMessage
+            )
         }
     }
 
+    // Handle login button click
+    fun onLoginClicked(identifier: String, password: String) {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isLoading = true,
+                    isLoginButtonEnabled = false
 
+                )
+            }
+
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isLoading = false,
+                    isLoginButtonEnabled = true
+                )
+            }
+            try {
+                val user = User(identifier, password)
+                val response = loginApi.postLogin(user)
+
+
+                if (response.isSuccessful) {
+                    _navigationEvents.send(NavigationEvent.NavigateToHome)
+                }
+                else{
+                    val errorMessage = "Erreur de connexion"
+                    onError(errorMessage)
+                    Log.e(TAG,errorMessage)
+                }
+
+            } catch (e: IOException) {
+                //gérer l'exception d'absence de connexion Internet'
+                val errorMessage = context.getString(R.string.error_no_Internet)
+                onError(errorMessage)
+                Log.e(TAG, errorMessage, e)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isLoading = false,
+                        isLoginButtonEnabled = true
+
+
+                    )
+                }
+
+            } catch (e: LoginException) {
+                //gérer ereur indentifiants incorects
+                val errorMessage = context.getString(R.string.error_invalid_identifier)
+                onError(errorMessage)
+                Log.e(TAG, errorMessage, e)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isLoading = false,
+                        isLoginButtonEnabled = true
+
+                    )
+                }
+            } catch (e: Exception) {
+                //gérer autres erreurs
+                val errorMessage = context.getString(R.string.unspecified_error)
+                onError(errorMessage)
+                Log.e(TAG, errorMessage, e)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isLoading = false,
+                        isLoginButtonEnabled = true
+                    )
+
+
+                }
+            }
+        }
+    }
 }
 
 
