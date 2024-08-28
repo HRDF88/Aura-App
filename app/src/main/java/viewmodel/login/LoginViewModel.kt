@@ -2,7 +2,6 @@ package viewmodel.login
 
 import android.content.Context
 import android.util.Log
-import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aura.Bo.User
@@ -16,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import okio.IOException
 import javax.inject.Inject
@@ -28,7 +28,10 @@ import javax.security.auth.login.LoginException
  * utility methods related to the notes UI.
  */
 @HiltViewModel
-class LoginViewModel @Inject constructor(@ApplicationContext private val context: Context, private val loginApi: LoginApiService) : ViewModel() {
+class LoginViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val loginApi: LoginApiService
+) : ViewModel() {
     // Create TAG for logging
     companion object {
         private const val TAG = "LoginViewModel"
@@ -63,12 +66,20 @@ class LoginViewModel @Inject constructor(@ApplicationContext private val context
         }
     }
 
-    fun onError(errorMessage:String){
-        _uiState.update { currentState->
+    private fun onError(errorMessage: String) {
+        _uiState.update { currentState ->
             currentState.copy(
-                error = errorMessage
+                error = errorMessage,
+                isLoading = false,
+                isLoginButtonEnabled = true
             )
         }
+    }
+    //update de errorMessage pour evité boucle
+    fun updateErrorState(errorMessage: String) {
+        val currentState = uiState.value
+        val updatedState = currentState.copy(error = errorMessage)
+        _uiState.value = updatedState
     }
 
     // Handle login button click
@@ -91,15 +102,16 @@ class LoginViewModel @Inject constructor(@ApplicationContext private val context
             try {
                 val user = User(identifier, password)
                 val response = loginApi.postLogin(user)
+                val loginResponse = response.body()
+                val granted = loginResponse?.granted
 
-
-                if (response.isSuccessful) {
+                if (granted == true) {
                     _navigationEvents.send(NavigationEvent.NavigateToHome)
-                }
-                else{
-                    val errorMessage = "Erreur de connexion"
+                } else {
+                    val errorMessage = context.getString(R.string.error_invalid_identifier)
                     onError(errorMessage)
-                    Log.e(TAG,errorMessage)
+                    Log.e(TAG, errorMessage)
+
                 }
 
             } catch (e: IOException) {

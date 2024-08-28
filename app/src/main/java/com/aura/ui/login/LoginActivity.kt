@@ -65,6 +65,9 @@ class LoginActivity : AppCompatActivity() {
                         .setMessage(uiState.error)
                         .setPositiveButton("OK", null)
                         .show()
+                    viewModel.updateErrorState("")
+
+
                 }
 
             }

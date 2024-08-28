@@ -1,4 +1,4 @@
 package com.aura.data
 
-class LoginRepository {
+class HomeRepository {
 }
