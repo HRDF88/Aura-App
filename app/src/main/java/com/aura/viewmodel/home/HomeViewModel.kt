@@ -6,10 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aura.Bo.AccountResponse
+import com.aura.bo.AccountResponse
 import com.aura.R
-import com.aura.Utils.HomeApiService
-import com.aura.data.HomeRepository
+import com.aura.service.HomeApiService
+import com.aura.repository.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okio.IOException
-import viewmodel.login.LoginViewModel
 import javax.inject.Inject
 /**
  * HomeViewModel is responsible for preparing and managing the data for the {@link HomeActivity}.

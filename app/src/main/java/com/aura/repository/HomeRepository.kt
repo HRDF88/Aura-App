@@ -1,7 +1,7 @@
-package com.aura.data
+package com.aura.repository
 
-import com.aura.Bo.AccountResponse
-import com.aura.Utils.HomeApiService
+import com.aura.bo.AccountResponse
+import com.aura.service.HomeApiService
 import com.aura.viewmodel.home.UserStateManager
 
 /**

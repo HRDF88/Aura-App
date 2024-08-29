@@ -1,4 +1,4 @@
-package com.aura.Utils
+package com.aura.service
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

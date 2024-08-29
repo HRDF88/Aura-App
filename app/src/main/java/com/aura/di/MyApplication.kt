@@ -1,11 +1,11 @@
 package com.aura.di
 
 import android.app.Application
-import com.aura.data.HomeRepository
+import com.aura.repository.HomeRepository
 import com.aura.viewmodel.home.HomeViewModel
 import dagger.Component
 import dagger.hilt.android.HiltAndroidApp
-import viewmodel.login.LoginViewModel
+import com.aura.viewmodel.login.LoginViewModel
 import javax.inject.Singleton
 
 /**

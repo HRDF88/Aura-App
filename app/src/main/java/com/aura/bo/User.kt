@@ -1,4 +1,4 @@
-package com.aura.Bo
+package com.aura.bo
 
 data class User(
     val id: String,

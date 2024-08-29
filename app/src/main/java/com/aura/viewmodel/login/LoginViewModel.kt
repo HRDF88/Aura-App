@@ -1,12 +1,12 @@
-package viewmodel.login
+package com.aura.viewmodel.login
 
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aura.Bo.User
+import com.aura.bo.User
 import com.aura.R
-import com.aura.Utils.LoginApiService
+import com.aura.service.LoginApiService
 import com.aura.viewmodel.home.UserStateManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okio.IOException
@@ -70,6 +69,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun onError(errorMessage: String) {
+        Log.e(TAG, errorMessage)
         _uiState.update { currentState ->
             currentState.copy(
                 error = errorMessage,
@@ -78,6 +78,7 @@ class LoginViewModel @Inject constructor(
             )
         }
     }
+
     //update de errorMessage pour evité boucle
     fun updateErrorState(errorMessage: String) {
         val currentState = uiState.value
@@ -96,16 +97,13 @@ class LoginViewModel @Inject constructor(
                 )
             }
 
-            _uiState.update { currentState ->
-                currentState.copy(
-                    isLoading = false,
-                    isLoginButtonEnabled = true
-                )
-            }
+
             try {
                 val user = User(identifier, password)
                 // de maniere asynchrone
-                val response = withContext((Dispatchers.IO)) { loginApi.postLogin(user)}
+                val response =
+                    withContext((Dispatchers.IO)) { loginApi.postLogin(user) }//mettre logginRequest
+                //TO DO repository pour login
                 val loginResponse = response.body()
                 val granted = loginResponse?.granted
 
@@ -115,7 +113,7 @@ class LoginViewModel @Inject constructor(
                 } else {
                     val errorMessage = context.getString(R.string.error_invalid_identifier)
                     onError(errorMessage)
-                    Log.e(TAG, errorMessage)
+
 
                 }
 
@@ -123,40 +121,26 @@ class LoginViewModel @Inject constructor(
                 //gérer l'exception d'absence de connexion Internet'
                 val errorMessage = context.getString(R.string.error_no_Internet)
                 onError(errorMessage)
-                Log.e(TAG, errorMessage, e)
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        isLoading = false,
-                        isLoginButtonEnabled = true
 
-
-                    )
-                }
 
             } catch (e: LoginException) {
                 //gérer ereur indentifiants incorects
                 val errorMessage = context.getString(R.string.error_invalid_identifier)
                 onError(errorMessage)
-                Log.e(TAG, errorMessage, e)
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        isLoading = false,
-                        isLoginButtonEnabled = true
 
-                    )
-                }
+
             } catch (e: Exception) {
                 //gérer autres erreurs
                 val errorMessage = context.getString(R.string.unspecified_error)
                 onError(errorMessage)
-                Log.e(TAG, errorMessage, e)
+
+
+            } finally {
                 _uiState.update { currentState ->
                     currentState.copy(
                         isLoading = false,
                         isLoginButtonEnabled = true
                     )
-
-
                 }
             }
         }

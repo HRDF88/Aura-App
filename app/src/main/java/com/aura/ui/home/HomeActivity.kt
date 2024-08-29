@@ -16,12 +16,13 @@ import com.aura.databinding.ActivityHomeBinding
 import com.aura.ui.login.LoginActivity
 import com.aura.ui.transfer.TransferActivity
 import com.aura.viewmodel.home.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import viewmodel.login.LoginViewModel
 
 /**
  * The home activity for the app.
  */
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
 
     /**
@@ -59,7 +60,7 @@ class HomeActivity : AppCompatActivity() {
                 )
             )
         }
-        /*
+
         lifecycleScope.launch {
             viewModel.uiState.collect { uiState ->
                 loading.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
@@ -76,7 +77,7 @@ class HomeActivity : AppCompatActivity() {
 
                 }
             }
-        }*/
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

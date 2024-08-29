@@ -2,8 +2,8 @@ package com.aura.di
 
 import android.app.Application
 import android.content.Context
-import com.aura.Utils.HomeApiService
-import com.aura.data.HomeRepository
+import com.aura.service.HomeApiService
+import com.aura.repository.HomeRepository
 import com.aura.viewmodel.home.UserStateManager
 import dagger.Module
 import dagger.Provides

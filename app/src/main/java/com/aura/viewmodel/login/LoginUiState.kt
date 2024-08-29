@@ -1,4 +1,4 @@
-package viewmodel.login
+package com.aura.viewmodel.login
 
 data class LoginUiState(
     val identifier: String = "",

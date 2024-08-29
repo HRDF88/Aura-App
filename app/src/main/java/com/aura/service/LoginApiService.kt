@@ -1,9 +1,8 @@
-package com.aura.Utils
+package com.aura.service
 
-import com.aura.Bo.LoginResponse
-import com.aura.Bo.User
+import com.aura.bo.LoginResponse
+import com.aura.bo.User
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.Response
 

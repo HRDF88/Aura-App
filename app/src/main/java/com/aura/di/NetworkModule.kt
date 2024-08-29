@@ -1,8 +1,8 @@
 package com.aura.di
 
-import com.aura.Utils.HomeApiService
-import com.aura.Utils.LoginApiService
-import com.aura.Utils.RetrofitClient
+import com.aura.service.HomeApiService
+import com.aura.service.LoginApiService
+import com.aura.service.RetrofitClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
