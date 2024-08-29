@@ -15,4 +15,5 @@
   <string name="error_no_Internet">Pas de connexion Internet. Veuillez vérifier votre connexion et réessayer.</string>
   <string name="error_invalid_identifier">Identifiant ou mot de passe incorrect</string>
   <string name="unspecified_error">Erreur non specifiée</string>
+  <string name="error_get_account">Accès aux informations impossible</string>
 </resources>

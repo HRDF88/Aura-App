@@ -19,7 +19,7 @@ object RetrofitClient {
         .add(KotlinJsonAdapterFactory())
         .build()
 
-    val loginApiService : LoginApiService by lazy {
+    val loginApiService: LoginApiService by lazy {
         Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
@@ -27,5 +27,12 @@ object RetrofitClient {
             .build()
             .create(LoginApiService::class.java)
     }
-
+    val homeApiService: HomeApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .client(okHttpClient)
+            .build()
+            .create(HomeApiService::class.java)
+    }
 }

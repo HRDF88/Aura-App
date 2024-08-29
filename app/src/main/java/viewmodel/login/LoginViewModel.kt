@@ -7,8 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.aura.Bo.User
 import com.aura.R
 import com.aura.Utils.LoginApiService
+import com.aura.viewmodel.home.UserStateManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +19,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okio.IOException
 import javax.inject.Inject
 import javax.security.auth.login.LoginException
@@ -101,11 +104,13 @@ class LoginViewModel @Inject constructor(
             }
             try {
                 val user = User(identifier, password)
-                val response = loginApi.postLogin(user)
+                // de maniere asynchrone
+                val response = withContext((Dispatchers.IO)) { loginApi.postLogin(user)}
                 val loginResponse = response.body()
                 val granted = loginResponse?.granted
 
                 if (granted == true) {
+                    UserStateManager.setUserId(identifier) // Enregistrement de l'ID de l'utilisateur
                     _navigationEvents.send(NavigationEvent.NavigateToHome)
                 } else {
                     val errorMessage = context.getString(R.string.error_invalid_identifier)

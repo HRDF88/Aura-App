@@ -38,7 +38,8 @@ class LoginActivity : AppCompatActivity() {
         val loading = binding.loading
         val identifier = binding.identifier
         val password = binding.password
-        //ajouter binding message erreur
+
+
 
         identifier.addTextChangedListener {
             viewModel.onIdentifierChanged(it.toString())
@@ -57,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
             viewModel.uiState.collect { uiState ->
                 login.isEnabled = uiState.isLoginButtonEnabled
                 loading.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
-                //mettre gestion erreur
+                //condition erreur
                 if (uiState.error.isNotBlank()) {
                     //Affiche une alerte avec le message d'erreur
                     AlertDialog.Builder(this@LoginActivity)

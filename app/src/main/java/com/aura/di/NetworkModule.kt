@@ -1,5 +1,6 @@
 package com.aura.di
 
+import com.aura.Utils.HomeApiService
 import com.aura.Utils.LoginApiService
 import com.aura.Utils.RetrofitClient
 import dagger.Module
@@ -13,5 +14,9 @@ object NetworkModule {
     @Provides
     fun provideLoginApiService():LoginApiService{
         return RetrofitClient.loginApiService
+    }
+    @Provides
+    fun provideHomeApiService():HomeApiService{
+        return  RetrofitClient.homeApiService
     }
 }
