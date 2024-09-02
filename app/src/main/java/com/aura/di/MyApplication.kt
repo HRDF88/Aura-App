@@ -1,7 +1,7 @@
 package com.aura.di
 
 import android.app.Application
-import com.aura.repository.HomeRepository
+import com.aura.repository.Repository
 import com.aura.viewmodel.home.HomeViewModel
 import dagger.Component
 import dagger.hilt.android.HiltAndroidApp
@@ -28,7 +28,7 @@ class MyApplication : Application() {
     }
     @Component(modules = [AppModule::class])
     interface HomeComponent{
-        fun inject(repository: HomeRepository)
+        fun inject(repository: Repository)
         fun inject(homeViewModel: HomeViewModel)
     }
 }

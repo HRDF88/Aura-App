@@ -8,6 +8,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
+/**
+ * Hilt NetworkModule for Api Class.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {

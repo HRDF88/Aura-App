@@ -3,13 +3,17 @@ package com.aura.di
 import android.app.Application
 import android.content.Context
 import com.aura.service.HomeApiService
-import com.aura.repository.HomeRepository
+import com.aura.repository.Repository
+import com.aura.service.LoginApiService
 import com.aura.viewmodel.home.UserStateManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
+/**
+ * Hilt AppModule to dependency injection.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -18,8 +22,8 @@ object AppModule {
         return application.applicationContext
     }
     @Provides
-    fun provideHomeRepository(apiService: HomeApiService, userStateManager: UserStateManager):HomeRepository{
-        return HomeRepository(apiService, userStateManager)
+    fun provideHomeRepository(apiService: HomeApiService, userStateManager: UserStateManager,apiServiceLoginApiService: LoginApiService):Repository{
+        return Repository(apiService, userStateManager,apiServiceLoginApiService)
     }
     @Provides
     fun provideUserStateManager(): UserStateManager{

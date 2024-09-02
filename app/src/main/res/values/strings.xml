@@ -1,19 +1,21 @@
 <resources>
-  <string name="app_name">Aura</string>
+    <string name="app_name">Aura</string>
 
-  <string name="prompt_identifier">Identifiant</string>
-  <string name="prompt_password">Mot de passe</string>
-  <string name="action_sign_in">Connexion</string>
+    <string name="prompt_identifier">Identifiant</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="action_sign_in">Connexion</string>
 
-  <string name="balance">Balance :</string>
-  <string name="disconnect">Déconnexion</string>
-  <string name="bank_transfer">Faire un virement</string>
+    <string name="balance">Balance :</string>
+    <string name="disconnect">Déconnexion</string>
+    <string name="bank_transfer">Faire un virement</string>
 
-  <string name="prompt_recipient">Destinataire</string>
-  <string name="prompt_amount">Montant</string>
-  <string name="action_transfer">Faire le virement</string>
-  <string name="error_no_Internet">Pas de connexion Internet. Veuillez vérifier votre connexion et réessayer.</string>
-  <string name="error_invalid_identifier">Identifiant ou mot de passe incorrect</string>
-  <string name="unspecified_error">Erreur non specifiée</string>
-  <string name="error_get_account">Accès aux informations impossible</string>
+    <string name="prompt_recipient">Destinataire</string>
+    <string name="prompt_amount">Montant</string>
+    <string name="action_transfer">Faire le virement</string>
+    <string name="error_no_Internet">Pas de connexion Internet. Veuillez vérifier votre connexion et réessayer.</string>
+    <string name="error_invalid_identifier">Identifiant ou mot de passe incorrect</string>
+    <string name="unspecified_error">Erreur non specifiée</string>
+    <string name="error_get_account">Accès aux informations impossible</string>
+    <string name="no_main_account">Vous n avez pas de compte principal</string>
+    <string name="retry">Réessayer</string>
 </resources>

@@ -1,7 +1,9 @@
 package com.aura.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -18,6 +20,8 @@ import com.aura.ui.transfer.TransferActivity
 import com.aura.viewmodel.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import androidx.lifecycle.observe as observeLifecycle
+import androidx.lifecycle.observe
 
 /**
  * The home activity for the app.
@@ -30,6 +34,9 @@ class HomeActivity : AppCompatActivity() {
      */
     private lateinit var binding: ActivityHomeBinding
 
+    /**
+     * The view model for this activity.
+     */
     private val viewModel: HomeViewModel by viewModels()
 
     /**
@@ -40,6 +47,7 @@ class HomeActivity : AppCompatActivity() {
             //TODO
         }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -49,9 +57,37 @@ class HomeActivity : AppCompatActivity() {
         val balance = binding.balance
         val transfer = binding.transfer
         val loading = binding.loading
+        val retry = binding.retry
 
-        balance.text = "2654,54€"
+        /**
+         * Call the view model with getUserAccounts to catch the user's accounts.
+         */
+        viewModel.getUserAccounts()
 
+        /**
+         * Observe accounts with the view model to display the balance and the retry button
+         * if there is an error.
+         */
+        viewModel.accounts.observe(this) { accounts ->
+            val mainAccount = accounts.find { it.main }
+            if (mainAccount != null) {
+                val balanceMain = mainAccount.balance
+                balance.text = balanceMain.toString() + "€"
+            } else {
+                balance.text = getString(R.string.no_main_account)
+                retry.visibility = View.VISIBLE
+            }
+        }
+        /**
+         * Retry Button click.
+         */
+        retry.setOnClickListener {
+            viewModel.getUserAccounts()
+            retry.visibility = View.GONE
+        }
+        /**
+         * Transfer button click.
+         */
         transfer.setOnClickListener {
             startTransferActivityForResult.launch(
                 Intent(
@@ -64,9 +100,10 @@ class HomeActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.uiState.collect { uiState ->
                 loading.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
-                //condition erreur
+                retry.visibility = if (uiState.retryButton) View.VISIBLE else View.GONE
+                //error condition
                 if (uiState.error.isNotBlank()) {
-                    //Affiche une alerte avec le message d'erreur
+                    //Display Alert with error message.
                     AlertDialog.Builder(this@HomeActivity)
                         .setTitle("Erreur de connexion")
                         .setMessage(uiState.error)

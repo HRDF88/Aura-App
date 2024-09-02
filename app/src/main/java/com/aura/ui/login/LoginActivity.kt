@@ -25,6 +25,10 @@ class LoginActivity : AppCompatActivity() {
      * The binding for the login layout.
      */
     private lateinit var binding: ActivityLoginBinding
+
+    /**
+     * The view model for this activity.
+     */
     private val viewModel: LoginViewModel by viewModels()
 
 

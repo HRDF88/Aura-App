@@ -7,8 +7,11 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
+/**
+ * object to use retrofit library and moshi json parser.
+ */
 object RetrofitClient {
-    private const val baseUrl = "http://10.0.2.2:8080 "
+    private const val baseUrl = "http://10.0.2.2:8080"
     private val login = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
     private val okHttpClient = OkHttpClient.Builder()
