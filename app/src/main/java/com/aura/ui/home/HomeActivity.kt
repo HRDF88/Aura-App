@@ -45,6 +45,7 @@ class HomeActivity : AppCompatActivity() {
     private val startTransferActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             //TODO
+        viewModel.getUserAccounts()
         }
 
     @SuppressLint("SetTextI18n")

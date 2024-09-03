@@ -2,7 +2,7 @@ package com.aura.viewmodel.home
 
 /**
  *
- * ui state change class homeActivity.
+ * Ui state change class HomeActivity.
  */
 data class HomeUiState(
     val isLoading: Boolean = false,

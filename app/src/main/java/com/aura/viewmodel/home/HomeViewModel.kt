@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aura.model.AccountResponse
 import com.aura.R
-import com.aura.service.HomeApiService
 import com.aura.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -31,7 +30,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val homeApi: HomeApiService,
     private val repository: Repository
 ) : ViewModel() {
     // Create TAG for logging
@@ -41,6 +39,10 @@ class HomeViewModel @Inject constructor(
 
     private val _accounts = MutableLiveData<List<AccountResponse>>()
     val accounts: LiveData<List<AccountResponse>> = _accounts
+
+    /**
+     * Expose screen UI state.
+     */
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 

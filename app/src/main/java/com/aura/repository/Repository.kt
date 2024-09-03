@@ -2,9 +2,12 @@ package com.aura.repository
 
 import com.aura.model.AccountResponse
 import com.aura.model.LoginResponse
+import com.aura.model.Transfer
+import com.aura.model.TransferResponse
 import com.aura.model.User
 import com.aura.service.HomeApiService
 import com.aura.service.LoginApiService
+import com.aura.service.TransferApiService
 import com.aura.viewmodel.home.UserStateManager
 
 /**
@@ -14,7 +17,8 @@ import com.aura.viewmodel.home.UserStateManager
 class Repository(
     private val homeApiService: HomeApiService,
     private val userStateManager: UserStateManager,
-    private val apiServiceLoginApiService: LoginApiService
+    private val apiServiceLoginApiService: LoginApiService,
+    private val transferApiService: TransferApiService
 ) {
     /**
      *Call the Api to log user.
@@ -39,9 +43,21 @@ class Repository(
             return response.body() ?: emptyList()
         } else {
             // Gérer le cas où userId est null
-            // Par exemple, vous pouvez retourner une liste vide ou générer une exception
-            // en fonction des exigences de votre application.
             return emptyList()
+        }
+    }
+
+    suspend fun transferRequest(
+        recipient: String,
+        amount: Double
+    ): TransferResponse? {
+        val sender = UserStateManager.getUserId()
+        val transfer = sender?.let { Transfer(it, recipient, amount) }
+        val response = transfer?.let { transferApiService.postTransfer(it) }
+        if (response != null) {
+            return response.body()
+        } else {
+            return null
         }
     }
 

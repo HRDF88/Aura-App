@@ -8,7 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 /**
- * object to use retrofit library and moshi json parser.
+ * Object to use retrofit library and moshi json parser.
  */
 object RetrofitClient {
     private const val baseUrl = "http://10.0.2.2:8080"
@@ -37,5 +37,13 @@ object RetrofitClient {
             .client(okHttpClient)
             .build()
             .create(HomeApiService::class.java)
+    }
+    val transferApiService: TransferApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .client(okHttpClient)
+            .build()
+            .create(TransferApiService::class.java)
     }
 }

@@ -3,6 +3,7 @@ package com.aura.di
 import com.aura.service.HomeApiService
 import com.aura.service.LoginApiService
 import com.aura.service.RetrofitClient
+import com.aura.service.TransferApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,5 +22,9 @@ object NetworkModule {
     @Provides
     fun provideHomeApiService():HomeApiService{
         return  RetrofitClient.homeApiService
+    }
+    @Provides
+    fun provideTransferApiService():TransferApiService{
+        return RetrofitClient.transferApiService
     }
 }

@@ -6,6 +6,7 @@ import com.aura.viewmodel.home.HomeViewModel
 import dagger.Component
 import dagger.hilt.android.HiltAndroidApp
 import com.aura.viewmodel.login.LoginViewModel
+import com.aura.viewmodel.transfer.TransferViewModel
 import javax.inject.Singleton
 
 /**
@@ -15,7 +16,6 @@ import javax.inject.Singleton
 class MyApplication : Application() {
 
 
-
     @Singleton
     @Component(modules = [NetworkModule::class])
     interface AppComponent {
@@ -23,12 +23,19 @@ class MyApplication : Application() {
     }
 
     @Component(modules = [AppModule::class])
-    interface LoginComponent{
+    interface LoginComponent {
         fun inject(viewModel: LoginViewModel)
     }
+
     @Component(modules = [AppModule::class])
-    interface HomeComponent{
+    interface HomeComponent {
         fun inject(repository: Repository)
         fun inject(homeViewModel: HomeViewModel)
+    }
+
+    @Component(modules = [AppModule::class])
+    interface TransferComponent {
+        fun inject(repository: Repository)
+        fun inject(transferViewModel: TransferViewModel)
     }
 }
