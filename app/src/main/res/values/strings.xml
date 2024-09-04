@@ -18,4 +18,7 @@
     <string name="error_get_account">Accès aux informations impossible</string>
     <string name="no_main_account">Vous n avez pas de compte principal</string>
     <string name="retry">Réessayer</string>
+    <string name="insufficient_balance_amount">Le montant du solde du compte est insuffisant pour le transfer</string>
+    <string name="error_transfer">Erreur lors du transfer, vérifiez les coordonnées du bénéficiaire</string>
+    <string name="error_insufficient_balance">Vous ne disposez pas du montant nécéssaire pour ce transfer.</string>
 </resources>

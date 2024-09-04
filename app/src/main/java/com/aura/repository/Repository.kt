@@ -38,12 +38,12 @@ class Repository(
         val userId = userStateManager.getUserId()
 
         // Vérifier si userId est null
-        if (userId != null) {
+        return if (userId != null) {
             val response = homeApiService.getAccounts(userId)
-            return response.body() ?: emptyList()
+            response.body() ?: emptyList()
         } else {
             // Gérer le cas où userId est null
-            return emptyList()
+            emptyList()
         }
     }
 
@@ -53,12 +53,7 @@ class Repository(
     ): TransferResponse? {
         val sender = UserStateManager.getUserId()
         val transfer = sender?.let { Transfer(it, recipient, amount) }
-        val response = transfer?.let { transferApiService.postTransfer(it) }
-        if (response != null) {
-            return response.body()
-        } else {
-            return null
-        }
+        return transfer?.let { transferApiService.postTransfer(it) }?.body()
     }
 
 
