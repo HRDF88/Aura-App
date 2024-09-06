@@ -49,7 +49,7 @@ class HomeActivity : AppCompatActivity() {
     private val startTransferActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             /**
-             * management of the transfer result
+             * management of the transfer result.
              */
             if (result.resultCode == Activity.RESULT_OK) {
                 Log.d("HomeActivity", "branchement result code = OK")
@@ -84,14 +84,33 @@ class HomeActivity : AppCompatActivity() {
         viewModel.getUserAccounts()
 
         /**
+         * Observe the UI State if error to view account balance.
+         */
+        lifecycleScope.launch {
+            viewModel.uiState.collect { uiState ->
+                loading.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
+                retry.visibility = if (uiState.retryButton) View.VISIBLE else View.GONE
+                //error condition
+                if (uiState.error.isNotBlank()) {
+                    Toast.makeText(this@HomeActivity, uiState.error, Toast.LENGTH_LONG)
+                        .show()
+                    viewModel.updateErrorState("")
+                }
+            }
+        }
+
+        /**
          * Observe accounts with the view model to display the balance and the retry button
          * if there is an error and transfer button enable.
          */
-        viewModel.accounts.observe(this) { accounts ->
+
+        viewModel.accounts.observe(this@HomeActivity) { accounts ->
             val mainAccount = accounts.find { it.main }
             if (mainAccount != null) {
                 val balanceMain = mainAccount.balance
                 balance.text = balanceMain.toString() + "€"
+                retry.visibility = View.GONE
+                transfer.visibility = View.VISIBLE
             } else {
                 balance.text = getString(R.string.no_main_account)
                 retry.visibility = View.VISIBLE
@@ -99,13 +118,14 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-
         /**
          * Retry Button click.
          */
         retry.setOnClickListener {
             viewModel.getUserAccounts()
-            retry.visibility = View.GONE
+            viewModel.updateErrorState("")
+            viewModel.updateRetryButtonState(false)
+
         }
         /**
          * Transfer button click.
@@ -118,23 +138,9 @@ class HomeActivity : AppCompatActivity() {
                 )
             )
         }
-        /**
-         * Observe the UI State if error to view account balance.
-         */
-        lifecycleScope.launch {
-            viewModel.uiState.collect { uiState ->
-                loading.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
-                retry.visibility = if (uiState.retryButton) View.VISIBLE else View.GONE
-                //error condition
-                if (uiState.error.isNotBlank()) {
-                    Toast.makeText(this@HomeActivity, uiState.error, Toast.LENGTH_LONG).show()
-                    viewModel.updateErrorState("")
 
-
-                }
-            }
-        }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.home_menu, menu)

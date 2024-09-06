@@ -1,5 +1,6 @@
 package com.aura.viewmodel.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -9,9 +10,12 @@ import androidx.lifecycle.viewModelScope
 import com.aura.model.AccountResponse
 import com.aura.R
 import com.aura.repository.Repository
+import com.aura.viewmodel.login.LoginViewModel
+import com.aura.viewmodel.login.NavigationEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,7 +33,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @SuppressLint("StaticFieldLeak") @ApplicationContext private val context: Context,
     private val repository: Repository
 ) : ViewModel() {
     // Create TAG for logging
@@ -47,9 +51,14 @@ class HomeViewModel @Inject constructor(
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     /**
+     * Channel to handle navigation events
+     */
+    private val _navigationEvents = Channel<NavigationEvent>(Channel.CONFLATED)
+    /**
      * update uiState if there is an error in the getUserAccounts method.
      */
     private fun onError(errorMessageHome: String) {
+        Log.e(TAG, errorMessageHome)
         _uiState.update { currentState ->
             currentState.copy(
                 error = errorMessageHome,
@@ -66,8 +75,17 @@ class HomeViewModel @Inject constructor(
         val currentState = uiState.value
         val updatedState = currentState.copy(error = errorMessageHome)
         _uiState.value = updatedState
+
     }
 
+    /**
+     * Update retryButton state to reset its value after the retry button iss clicked.
+     */
+    fun updateRetryButtonState(retry:Boolean) {
+        val currentState = uiState.value
+        val updatedState = currentState.copy(retryButton = retry)
+        _uiState.value = updatedState
+    }
     /**
      * Method that retrieves the user's balance from the repository, also allows network error handling
      * and other exceptions.
@@ -87,6 +105,12 @@ class HomeViewModel @Inject constructor(
                 _accounts.value = accounts
                 if (accounts.isEmpty()) {
                     onError(errorMessageHome = context.getString(R.string.error_get_account))
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isLoading = false,
+                            retryButton = true)
+                    }
+
                 }
             } catch (e: Exception) {//handle other errors
                 val errorMessageHome = context.getString(R.string.unspecified_error)
@@ -112,7 +136,6 @@ class HomeViewModel @Inject constructor(
                 _uiState.update { currentState ->
                     currentState.copy(//refresh the uiState by setting isLoading false
                         isLoading = false,
-                        retryButton = false
                     )
                 }
             }
