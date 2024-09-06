@@ -2,15 +2,10 @@ package com.aura.viewmodel.transfer
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aura.R
-import com.aura.model.AccountResponse
 import com.aura.repository.Repository
-import com.aura.service.TransferApiService
-import com.aura.viewmodel.home.HomeViewModel
 import com.aura.viewmodel.login.NavigationEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -25,9 +20,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
-import java.math.BigDecimal
 import javax.inject.Inject
 
+/**
+ * TransferViewModel is responsible for preparing and managing the data for the {@link TransferActivity}.
+ * It communicates with the API to fetch login details and provides
+ * utility methods related to the notes UI.
+ */
 @HiltViewModel
 class TransferViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -49,7 +48,7 @@ class TransferViewModel @Inject constructor(
      * Channel to handle navigation events
      */
     private val _navigationEvents = Channel<NavigationEvent>(Channel.CONFLATED)
-    val navigationEvents = _navigationEvents.receiveAsFlow()
+
 
     /**
      * Update the UI state based on user input (recipient).
@@ -58,10 +57,8 @@ class TransferViewModel @Inject constructor(
         _uiState.update { currentState ->
             currentState.copy(
                 recipient = recipient,
-                isTransferButtonEnabled = currentState.recipient.isNotEmpty() && currentState.amount > 0
-
+                isTransferButtonEnabled = currentState.recipient.isNotEmpty() && currentState.amount > 0.0
             )
-
         }
     }
 
@@ -72,10 +69,8 @@ class TransferViewModel @Inject constructor(
         _uiState.update { currentState ->
             currentState.copy(
                 amount = amount,
-                isTransferButtonEnabled = currentState.recipient.isNotEmpty() && currentState.amount > 0
-
+                isTransferButtonEnabled = currentState.recipient.isNotEmpty() && currentState.amount > 0.0
             )
-
         }
     }
 
@@ -102,7 +97,10 @@ class TransferViewModel @Inject constructor(
         _uiState.value = updatedState
     }
 
-
+    /**
+     * Handle transfer button click to post sender, recipient and amount on Api.
+     * @return result to go in transfer_activity.
+     */
     fun onTransferClicked(recipient: String, amount: Double) {
         viewModelScope.launch {
             _uiState.update { currentState ->
@@ -117,14 +115,13 @@ class TransferViewModel @Inject constructor(
                     repository.transferRequest(recipient, amount)
                 }
                 if (response != null) {
-                    if (response.result==true) {
+                    if (response.result == true) {
                         _navigationEvents.send(NavigationEvent.NavigateToHome)
                     } else {
                         val errorMessage = context.getString(R.string.insufficient_balance_amount)
                         onError(errorMessage)
                     }
-                }
-                if (response==null){
+                } else {
                     val errorMessage = context.getString(R.string.error_transfer)
                     onError(errorMessage)
                 }

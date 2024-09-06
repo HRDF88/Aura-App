@@ -3,6 +3,7 @@ package com.aura.ui.login
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -44,42 +45,47 @@ class LoginActivity : AppCompatActivity() {
         val password = binding.password
 
 
-
+        /**
+         * the UI state based on user input and linked with element xml (identifier).
+         */
         identifier.addTextChangedListener {
             viewModel.onIdentifierChanged(it.toString())
         }
+
+        /**
+         * the UI state based on user input and linked with element xml (password).
+         */
         password.addTextChangedListener {
             viewModel.onPasswordChanged(it.toString())
         }
+
+        /**
+         * Click login button.
+         */
         login.setOnClickListener {
             val identifierValue = identifier.text.toString()
             val passwordValue = password.text.toString()
             viewModel.onLoginClicked(identifierValue, passwordValue)
         }
 
-        // Observe the UI state from the ViewModel
+        /**
+         * Observe the UI state from the ViewModel.
+         */
         lifecycleScope.launch {
             viewModel.uiState.collect { uiState ->
                 login.isEnabled = uiState.isLoginButtonEnabled
                 loading.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
                 //condition erreur
                 if (uiState.error.isNotBlank()) {
-                    //Affiche une alerte avec le message d'erreur
-                    AlertDialog.Builder(this@LoginActivity)
-                        .setTitle("Erreur de connexion")
-                        .setMessage(uiState.error)
-                        .setPositiveButton("OK", null)
-                        .show()
+                    Toast.makeText(this@LoginActivity, uiState.error, Toast.LENGTH_LONG).show()
                     viewModel.updateErrorState("")
-
-
                 }
-
             }
-
         }
 
-        // Observe navigation events from the ViewModel
+        /**
+         * Observe navigation events from the ViewModel.
+         */
         lifecycleScope.launch {
             viewModel.navigationEvents.collect { event ->
                 when (event) {
@@ -91,7 +97,5 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
-
 }

@@ -12,5 +12,5 @@ import retrofit2.http.POST
  */
 interface TransferApiService {
     @POST("/transfer")
-    suspend fun postTransfer(@Body transfer: Transfer) : Response<TransferResponse>
+    suspend fun postTransfer(@Body transfer: Transfer): Response<TransferResponse>
 }

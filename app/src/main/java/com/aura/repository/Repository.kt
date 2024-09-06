@@ -22,6 +22,7 @@ class Repository(
 ) {
     /**
      *Call the Api to log user.
+     * @return response to loginApiService (granted).
      */
     suspend fun loginRequest(identifier: String, password: String): LoginResponse? {
         val user = User(identifier, password)
@@ -36,25 +37,28 @@ class Repository(
 
     suspend fun getUserAccounts(): List<AccountResponse> {
         val userId = userStateManager.getUserId()
-
-        // Vérifier si userId est null
+        // Check if userId is null.
         return if (userId != null) {
             val response = homeApiService.getAccounts(userId)
             response.body() ?: emptyList()
         } else {
-            // Gérer le cas où userId est null
+            // Handles the case where userId is null.
             emptyList()
         }
     }
 
+    /**
+     * Call the Api to transfer money between users.
+     * @return result to transferApiService.
+     */
     suspend fun transferRequest(
         recipient: String,
         amount: Double
+        /*result can be null if the api does not find the beneficiary
+          and in upstream cannot find the sender (user id).*/
     ): TransferResponse? {
         val sender = UserStateManager.getUserId()
         val transfer = sender?.let { Transfer(it, recipient, amount) }
         return transfer?.let { transferApiService.postTransfer(it) }?.body()
     }
-
-
 }

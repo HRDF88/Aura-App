@@ -95,6 +95,7 @@ class HomeViewModel @Inject constructor(
                 _uiState.update { currentState ->
                     currentState.copy(
                         isLoading = false,
+                        retryButton = true
                     )
                 }
             } catch (e: IOException) { //handle no internet connection exception
@@ -104,12 +105,14 @@ class HomeViewModel @Inject constructor(
                 _uiState.update { currentState ->
                     currentState.copy(
                         isLoading = false,
+                        retryButton = true
                     )
                 }
             } finally {
                 _uiState.update { currentState ->
                     currentState.copy(//refresh the uiState by setting isLoading false
                         isLoading = false,
+                        retryButton = false
                     )
                 }
             }

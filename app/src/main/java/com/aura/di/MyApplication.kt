@@ -14,7 +14,9 @@ import javax.inject.Singleton
  */
 @HiltAndroidApp
 class MyApplication : Application() {
-
+    /**
+     * Hilt Singleton and Component to dependency injection.
+     */
 
     @Singleton
     @Component(modules = [NetworkModule::class])

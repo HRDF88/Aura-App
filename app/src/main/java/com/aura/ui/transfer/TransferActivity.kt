@@ -1,23 +1,16 @@
 package com.aura.ui.transfer
 
-import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import com.aura.databinding.ActivityTransferBinding
 import com.aura.viewmodel.transfer.TransferViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import javax.inject.Scope
 
 /**
  * The transfer activity for the app.
@@ -46,26 +39,53 @@ class TransferActivity : AppCompatActivity() {
         val transfer = binding.transfer
         val loading = binding.loading
 
-        recipient.addTextChangedListener {
-            viewModel.onRecipientChanged(it.toString())
-        }
-        amount.addTextChangedListener { text ->
-            viewModel.onAmountChanged(text.toString().toDoubleOrNull() ?: 0.0)
-        }
         lifecycleScope.launch {
             viewModel.uiState.collect { uiState ->
                 transfer.isEnabled = uiState.isTransferButtonEnabled
-            }
-        }
-        transfer.setOnClickListener {
-            loading.visibility = View.VISIBLE
-            val recipientValue = recipient.text.toString()
-            val amountText = amount.text.toString()
-            val amountValue = amountText.toDoubleOrNull() ?: 0.0
-            viewModel.onTransferClicked(recipientValue, amountValue)
+                /**
+                 * the UI state based on user input and linked with element xml (recipient).
+                 */
+                recipient.addTextChangedListener {
+                    viewModel.onRecipientChanged(it.toString())
+                }
 
-            setResult(RESULT_OK)
-            finish()
+                /**
+                 * the UI state based on user input and linked with element xml (amount).
+                 */
+                amount.addTextChangedListener { text ->
+                    viewModel.onAmountChanged(text.toString().toDoubleOrNull() ?: 0.0)
+                }
+
+                /**
+                 * Transfer button click,
+                 * error and activity management.
+                 */
+
+                transfer.setOnClickListener {
+                    loading.visibility = View.VISIBLE
+                    val recipientValue = recipient.text.toString()
+                    val amountText = amount.text.toString()
+                    val amountValue = amountText.toDoubleOrNull() ?: 0.0
+                    viewModel.onTransferClicked(recipientValue, amountValue)
+                    lifecycleScope.launch {
+                        viewModel.uiState.collect { uiState ->
+                            if (uiState.error.isNotBlank()) {
+                                Toast.makeText(
+                                    this@TransferActivity,
+                                    uiState.error,
+                                    Toast.LENGTH_LONG
+                                )
+                                    .show()
+                                viewModel.updateErrorState("")
+                            } else {
+                                setResult(RESULT_OK)
+                                finish()
+                            }
+                        }
+                    }
+
+                }
+            }
         }
     }
 }

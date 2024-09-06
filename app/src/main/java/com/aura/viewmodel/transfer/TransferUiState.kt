@@ -1,7 +1,5 @@
 package com.aura.viewmodel.transfer
 
-import java.math.BigDecimal
-
 /**
  * Ui state change class TransferActivity.
  */

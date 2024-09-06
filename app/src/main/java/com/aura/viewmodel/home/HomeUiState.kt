@@ -1,7 +1,6 @@
 package com.aura.viewmodel.home
 
 /**
- *
  * Ui state change class HomeActivity.
  */
 data class HomeUiState(

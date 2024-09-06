@@ -11,7 +11,5 @@ import retrofit2.http.Path
  */
 interface HomeApiService {
     @GET("/accounts/{id}")
-    suspend fun getAccounts(@Path("id") id : String) : Response<List<AccountResponse>>
-
-
+    suspend fun getAccounts(@Path("id") id: String): Response<List<AccountResponse>>
 }

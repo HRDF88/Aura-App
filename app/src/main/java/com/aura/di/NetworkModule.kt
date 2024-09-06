@@ -16,15 +16,17 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     @Provides
-    fun provideLoginApiService():LoginApiService{
+    fun provideLoginApiService(): LoginApiService {
         return RetrofitClient.loginApiService
     }
+
     @Provides
-    fun provideHomeApiService():HomeApiService{
-        return  RetrofitClient.homeApiService
+    fun provideHomeApiService(): HomeApiService {
+        return RetrofitClient.homeApiService
     }
+
     @Provides
-    fun provideTransferApiService():TransferApiService{
+    fun provideTransferApiService(): TransferApiService {
         return RetrofitClient.transferApiService
     }
 }

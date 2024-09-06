@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -20,6 +21,7 @@ import com.aura.ui.login.LoginActivity
 import com.aura.ui.transfer.TransferActivity
 import com.aura.viewmodel.home.HomeViewModel
 import com.aura.viewmodel.transfer.TransferViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -40,15 +42,26 @@ class HomeActivity : AppCompatActivity() {
      * The view model for this activity.
      */
     private val viewModel: HomeViewModel by viewModels()
-    private val transferViewModel: TransferViewModel by viewModels()
 
     /**
      * A callback for the result of starting the TransferActivity.
      */
     private val startTransferActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            /**
+             * management of the transfer result
+             */
             if (result.resultCode == Activity.RESULT_OK) {
-                onErrorTransferResult()
+                Log.d("HomeActivity", "branchement result code = OK")
+                val homeIntent = Intent(this@HomeActivity, HomeActivity::class.java)
+                startActivity(homeIntent)
+                viewModel.getUserAccounts()
+            } else {
+                Log.d("HomeActivity", "Branchement result code = KO")
+                val errorTransferActivity = getString(R.string.error_transfer_activity)
+                Toast.makeText(this@HomeActivity, errorTransferActivity, Toast.LENGTH_LONG).show()
+                val homeIntent = Intent(this@HomeActivity, HomeActivity::class.java)
+                startActivity(homeIntent)
                 viewModel.getUserAccounts()
             }
         }
@@ -105,19 +118,16 @@ class HomeActivity : AppCompatActivity() {
                 )
             )
         }
-
+        /**
+         * Observe the UI State if error to view account balance.
+         */
         lifecycleScope.launch {
             viewModel.uiState.collect { uiState ->
                 loading.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
                 retry.visibility = if (uiState.retryButton) View.VISIBLE else View.GONE
                 //error condition
                 if (uiState.error.isNotBlank()) {
-                    //Display Alert with error message.
-                    AlertDialog.Builder(this@HomeActivity)
-                        .setTitle("Erreur de connexion")
-                        .setMessage(uiState.error)
-                        .setPositiveButton("OK", null)
-                        .show()
+                    Toast.makeText(this@HomeActivity, uiState.error, Toast.LENGTH_LONG).show()
                     viewModel.updateErrorState("")
 
 
@@ -140,25 +150,6 @@ class HomeActivity : AppCompatActivity() {
             }
 
             else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    fun onErrorTransferResult() {
-        lifecycleScope.launch {
-            transferViewModel.uiState.collect { uiState ->
-                if (uiState.error.isNotBlank()) {
-                    Log.d("HomeActivity", "API Error: ${uiState.error}")
-                    val errorMessage = uiState.error
-                    AlertDialog.Builder(this@HomeActivity)
-                        .setTitle("Erreur de transfert")
-                        .setMessage(errorMessage)
-                        .setPositiveButton("OK") { dialog, _ ->
-                            dialog.dismiss()
-                            transferViewModel.updateErrorState("")
-                        }
-                        .show()
-                }
-            }
         }
     }
 
