@@ -129,9 +129,9 @@ class RepositoryUnitTest {
      */
     @Test
     fun transferRequestSuccess() = runBlocking {
-        val recipient = "recipientID"
+        val recipient = "5678"
         val amount = 100.0
-        val sender = "senderID"
+        val sender = "1234"
         val transfer = Transfer(sender, recipient, amount)
         coEvery { UserStateManager.getUserId() } returns sender
         coEvery { transferApiService.postTransfer(transfer) } returns Response.success(
