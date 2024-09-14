@@ -56,6 +56,10 @@ dependencies {
     testImplementation ("junit:junit:4.13.2")
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
 
+    // Coroutines for asynchronous programming
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
+
     // Retrofit + Moshi
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
@@ -65,9 +69,19 @@ dependencies {
 
     // mockk
     testImplementation("io.mockk:mockk:1.4.1")
-    testImplementation("org.mockito:mockito-core:3.10.0")
-    testImplementation("org.mockito:mockito-inline:3.10.0")
-    testImplementation ("org.mockito.kotlin:mockito-kotlin:3.2.0")
+
+
+    // JUnit for testing
+    testImplementation("junit:junit:4.13.2")
+
+    // Mockito for mocking dependencies
+    testImplementation("org.mockito:mockito-core:3.12.4")
+
+    // Mockito Kotlin for easier mocking of Kotlin classes
+    testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
+
+    // MockWebServer
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 
     // Existing dependencies
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.5")
@@ -83,6 +97,6 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.annotation:annotation:1.8.2")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+
 
 }
