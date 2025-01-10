@@ -1,41 +1,17 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a name="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
+## Bonjour 👋, je suis Julien SEGUIN  
+Étudiant en Développement Android chez OpenClassrooms, passionné par la création d'applications mobiles intuitives et performantes. Mon objectif est de développer des solutions mobiles innovantes pour répondre aux besoins des utilisateurs.
 
+### 🌱 Actuellement, je travaille sur :
+- Le développement d'applications Android en Kotlin.
+- L'apprentissage de bonnes pratiques de développement mobile (architecture MVVM, tests unitaires, etc.).
+- La publication de projets sur GitHub pour enrichir mon portfolio.
 
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-    <img src="aura.png" alt="Logo" width="200" height="200">
+### 🚀 Compétences
+- **Langages** : Kotlin.
+- **Outils** : Android Studio, Firebase, Retrofit, Room.
+- **Architecture** : MVVM, LiveData, Flow, ViewModel.
+- **Autres compétences** : Git, REST API, UI/UX design pour Android.
 
-<h3 align="center">AURA ANDROID</h3>
-
-  <p align="center">
-    The Android app AURA
-  </p>
-</div>
-
-### Built With
-
-* ![android]
-* ![kotlin]
-* ![androidstudio]
-* ![gradle]
-
-<!-- GETTING STARTED -->
-## Getting Started
-
-Coming soon...
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[android]: https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white
-[kotlin]: https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=Kotlin&logoColor=white
-[androidstudio]: https://img.shields.io/badge/Android%20Studio-3DDC84?style=for-the-badge&logo=androidstudio&logoColor=white
-[gradle]: https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white
+###  📱 Projets
+-Dans le cadre de ma formation le projet AURA est une application consistant à apprendre l'utilisation d'API REST.
+- Un soin particulier à la gestion des erreurs à été effectué pour ce projet.
